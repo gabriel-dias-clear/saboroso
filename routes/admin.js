@@ -2,7 +2,10 @@ var express = require('express');
 var router = express.Router();
 var users = require('./../inc/users')
 var admin = require('./../inc/admin');
-var menus = require('./../inc/menus')
+var menus = require('./../inc/menus');
+var reservations = require('./../inc/reservations')
+
+
 router.use(function(req, res, next){
     if(['/login'].indexOf(req.url) === -1 && !req.session.user){
         res.redirect('/admin/login');
@@ -10,7 +13,7 @@ router.use(function(req, res, next){
     else{
         next()
     }
-})
+}) 
 router.use(function(req,res, next){
     req.menus = admin.getMenus(req);
     next();
@@ -28,8 +31,10 @@ router.get('/', function(req, res, next){
         console.log(err)
     })
 });
+
 router.post('/login', function(req,res, next){
-    console.log('chegou kkkkkkkkk')
+    req.body.email = req.fields.email
+    req.body.password = req.fields.password
     if(!req.body.email){
         users.render(req, res, 'preencha o campo email');
     }
@@ -82,6 +87,16 @@ router.get('/reservations', function(req, res, next){
         date: {}
     }))
 });
+router.post('/reservations', (req,res,next)=>{
+    console.log('CHEGAMOS AONDE NINGUEM CHEGOU')
+    reservations.save(req.fields).then(results => {
+        console.log('Resultados:', results)
+        res.send(results);
+    }).catch(err => {
+        console.log('Deu erro:', err)
+        res.send(err);
+    })
+})
 router.get('/users', function(req, res, next){
     res.render('admin/users', admin.getParams(req))
 });
