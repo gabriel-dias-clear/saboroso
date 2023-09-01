@@ -15,6 +15,7 @@ router.use(function(req, res, next){
     }
 }) 
 router.use(function(req,res, next){
+
     req.menus = admin.getMenus(req);
     next();
 })
@@ -83,15 +84,24 @@ router.get('/emails', function(req, res, next){
     res.render('admin/emails', admin.getParams(req))
 });
 router.get('/reservations', function(req, res, next){
-    res.render('admin/reservations', admin.getParams(req, {
-        date: {}
-    }))
+
+    reservations.getReservations().then(data=>{
+
+        res.render('admin/reservations', admin.getParams(req, {
+            date: {},
+            data
+        }))
+
+
+    })
+
+    
 });
 router.post('/reservations', (req,res,next)=>{
     console.log('CHEGAMOS AONDE NINGUEM CHEGOU')
     reservations.save(req.fields).then(results => {
         console.log('Resultados:', results)
-        res.send(results);
+        res.redirect('/admin/reservations')
     }).catch(err => {
         console.log('Deu erro:', err)
         res.send(err);

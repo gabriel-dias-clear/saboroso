@@ -14,7 +14,9 @@ var adminRouter = require('./routes/admin');
 var app = express();
 
 app.use(async (req, res, next) => {
+  console.log('ta caindo no middleware')
   if (req.method.toLowerCase() === 'post') {
+    console.log('cararaarara')
     console.log(req.method);
     const form = new formidable.IncomingForm({
       uploadDir: path.join(__dirname, "/public/images"),
@@ -38,6 +40,7 @@ app.use(async (req, res, next) => {
         console.log('req.fields1:', req.fields);
         console.log('req.files1', req.files);
         console.log('Ok mano');
+        console.log(req.url)
         resolve();
         next()
       });
