@@ -152,11 +152,11 @@ router.post('/reservations', function (req, res, next) {
         res.redirect('/admin/reservations')
 
     })
+
 })
 
 router.delete('/reservations:id', async function (req, res, next) {
 
-        console.log('REQ.PARAMS', req.params.id[1]);
 
         const deleted = await reservations.delete(req.params.id[1]);
 
@@ -171,15 +171,22 @@ End reservations routes
 
 router.get('/users', function (req, res, next) {
 
-    res.render('admin/users', admin.getParams(req))
-
+    users.getUsers().then(data=>{
+        res.render('admin/users', admin.getParams(req, {data}));
+    })
+    
 });
 
-router.post('/users', function (req, res, next){
-    users.save(req.fields).then(result=>{
-        res.redirect('/admin/users')
+router.post('/users', async function (req, res, next) {
+
+    await users.save(req.fields).then(result=>{
+        res.end()
+    }).catch(err=>{
+        console.log('Erro=>', err);
+        console.log('Prosseguindo')
     })
-})
+    
+});
 
 
 

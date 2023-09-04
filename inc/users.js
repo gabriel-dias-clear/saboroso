@@ -1,4 +1,5 @@
-var conn = require('./db')
+const conn = require('./db')
+const connpromise = require('./promisedb')
 
 module.exports = {
 
@@ -49,32 +50,62 @@ module.exports = {
 
     },
 
-    save(fields) {
-        return new Promise((s, f) => {
-            const date = new Date()
-            let query, params;
+    async save(fields) {
+
+        console.log('CHeGOU EM SAVETEST')
+        console.log(fields)
+        let query, params;
+
+        console.log('fields:', fields)
+
+
+
+        //verifies if fields.id is bigger than 0, this specifies if we are creating or updating a query
+        if (parseInt(fields.id) >= 0) {
+            //UPDATE
+            query = 'UPDATE tb_users SET name = ?, email = ? WHERE id = ?'
+
+            params = [
+                fields.name,
+                fields.email,
+                fields.id
+            ]
+
+        }
+        else {
+
+            //INSERT
+            query = "INSERT INTO tb_users (name, email, password, register) VALUES (?, ?, ? ,?)"
+
             params = [
                 fields.name,
                 fields.email,
                 fields.password,
-                date
+                new Date()
             ]
-            if (parseInt(fields.id) >= 0) {
-                console.log('METHOD UPDATE')
-                query = `UPDATE tb_users SET name = ?, email = ?, date = ?, time = ? WHERE id = ?`
-                params.push(fields.id)
-            }
-            else {
-                console.log('METHOD INSERT')
-                query = "INSERT INTO tb_users (name, email, password, register) VALUES (?, ?, ?, ?)"
-            }
+        }
 
-            conn.query(query, params, (err, result) => {
+        console.log('AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+        let aux;
+        await connpromise.query(query, params).then((result) => {
+            console.log('Corrigido')
+            console.log('result', result);
+            aux = result
+        })
+        console.log('RESULTE:', aux);
+        return aux
+    },
+
+    getUsers() {
+        return new Promise((resolve, reject) => {
+            conn.query(`
+            SELECT * FROM tb_users;`, (err, result) => {
                 if (err) {
-                    f(err);
+                    reject(err);
                 }
                 else {
-                    s(result)
+                    console.log('Reservations:', result)
+                    resolve(result)
                 }
             })
         })
