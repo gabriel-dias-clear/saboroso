@@ -1,26 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Admin - Hcode Treinamentos</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" href="bower_components/Ionicons/css/ionicons.min.css">
-  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="dist/css/skins/skin-blue.min.css">
-  <meta name="author" content="Hcode.com.br" />  
-  <meta name="theme-color" content="#3c8dbc">
-</head>
+<%- include('includes/header') %>
 
-<body class="hold-transition skin-blue sidebar-mini">
-<div class="wrapper">
-
-  <!-- Main Header -->
-  <%- include("includes/header") -%>
-
-  <!-- Left side column. contains the logo and sidebar -->
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -54,16 +33,21 @@
                   </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1.</td>
-                        <td>Hcode</td>
-                        <td>contato@hcode.com.br</td>
+                  <% data.forEach((row)=>{
+
+                   %>
+                    <tr data-row="<%= JSON.stringify(row) %>">
+                        <td><%= row.id %></td>
+                        <td><%= row.name %></td>
+                        <td><%= row.email %></td>
                         <td>
-                            <button type="button" class="btn btn-xs btn-info" data-toggle="modal" data-target="#modal-update"><i class="fa fa-pencil"></i> Editar</button>&nbsp;
+                            <button type="button" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i> Editar</button>&nbsp;
                             <button type="button" class="btn btn-xs btn-warning btn-update" data-toggle="modal" data-target="#modal-update-password">
                                 <i class="fa fa-lock"></i> Alterar Senha</button>&nbsp;
                             <button type="button" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Excluir</button></td>
                     </tr>
+
+                    <% }) %>
                 </tbody>
             </table>
         </div>
@@ -110,7 +94,7 @@
   <div class="modal fade" id="modal-create">
     <div class="modal-dialog">
       <div class="modal-content" style="border-top: 3px solid #00a65a;">
-        <form method="post">
+        <form action="/admin/users" method="post">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
@@ -145,7 +129,7 @@
   <div class="modal fade" id="modal-update">
     <div class="modal-dialog">
       <div class="modal-content" style="border-top: 3px solid #00c0ef;">
-        <form method="post">
+        <form action="/admin/users" method="post">
           <input type="hidden" name="id">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -174,46 +158,86 @@
     <!-- /.modal-dialog -->
   </div>
 
-  <!-- Main Footer -->
-  <footer class="main-footer">
-    <!-- To the right -->
-    <div class="pull-right hidden-xs">
-      <a target="_blank" href="https://www.hcode.com.br">Hcode</a>
-    </div>
-    <!-- Default to the left -->
-    Projeto desenvolvido no curso online de JavaScript da Hcode Treinamentos.
-  </footer>
+<%- include('includes/footer') %>
+<script src="/js/hcode-formsave.js"></script>
+<script>
+  
 
-</div>
+  let formCreate = document.querySelector('#modal-create form');
 
-<!-- jQuery 3 -->
-<script src="bower_components/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<!-- PACE -->
-<script src="bower_components/PACE/pace.min.js"></script>
-<!-- SlimScroll -->
-<script src="bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<!-- FastClick -->
-<script src="bower_components/fastclick/lib/fastclick.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
-<!-- page script -->
-<script type="text/javascript">
-  // To make Pace works on Ajax calls
-  $(document).ajaxStart(function () {
-    Pace.restart()
-  })
-  $('.ajax').click(function () {
-    $.ajax({
-      url: '#', success: function (result) {
-        $('.ajax-content').html('<hr>Ajax Request Completed !')
-      }
-    })
-  })
-</script>
+      let formUpdate = document.querySelector('#modal-update form');
 
-</body>
-</html>
+      formCreate.save().then(()=>{
+        setTimeout(() => {
+        window.location.reload()
+        }, 800);
+      })
+
+      formUpdate.save().then(()=>{
+        setTimeout(() => {
+          window.location.reload();  
+        }, 800);
+        
+      })
+
+      document.querySelectorAll('.btn-info').forEach(btn => {
+
+        btn.addEventListener('click', e => {
+
+          let tr = e.composedPath().find(el => {
+            return (el.tagName.toUpperCase() === 'TR')
+          })
+
+          let data = JSON.parse(tr.dataset.row)
+
+          console.log('data:', data)
+
+          for (const name in data) {
+
+
+            switch (name) {
+              case 'photo':
+                formUpdate.querySelector('img').src = '/' + data[name]
+                document.querySelector('#inputPhotoUpdate').dataset.filename = '/' + data[name];
+
+                break
+              case 'date':send
+                let dataday = data[name].split('-')
+                console.log('dataday split');
+                console.log(dataday)
+
+                let dataformatted = `${dataday[0]}-${dataday[1]}-${dataday[2].substr(0,2)}`;
+                console.log('dataformated')
+                console.log(dataformatted)
+                document.querySelector('#inputDateUpdate').value = dataformatted
+                break
+
+              default:
+                let input = formUpdate.querySelector(`[name=${name}]`)
+                if (input) input.value = data[name];
+            }
+
+          }
+          $('#modal-update').modal('show')
+        })
+      })
+    
+      document.querySelectorAll('.btn-delete').forEach(btn=>{
+
+        btn.addEventListener('click', e=>{
+
+          let tr = e.composedPath().find(el => {
+            return (el.tagName.toUpperCase() === 'TR')
+          })
+
+          let data = JSON.parse(tr.dataset.row)
+          fetch(`/admin/users:${data.id}`, {
+            method: 'DELETE',
+          }).then(()=>{
+            window.location.reload()
+          })
+
+        })
+      })
+
+  </script>
