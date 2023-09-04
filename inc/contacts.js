@@ -35,6 +35,27 @@ module.exports = {
 
         })
 
+    },
+
+    contacts() {
+        return new Promise((s, f) => {
+
+            conn.query(
+                `
+                SELECT * FROM tb_contacts ORDER BY name
+            `,
+                (err, results) => {
+
+                    if (err) {
+                        f(err);
+                    } else {
+                        s(results);
+                    }
+
+                }
+            );
+
+        });
     }
 
 }
