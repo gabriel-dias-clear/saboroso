@@ -47,5 +47,36 @@ module.exports = {
 
         })
 
+    },
+
+    save(fields) {
+        return new Promise((s, f) => {
+            const date = new Date()
+            let query, params;
+            params = [
+                fields.name,
+                fields.email,
+                fields.password,
+                date
+            ]
+            if (parseInt(fields.id) >= 0) {
+                console.log('METHOD UPDATE')
+                query = `UPDATE tb_users SET name = ?, email = ?, date = ?, time = ? WHERE id = ?`
+                params.push(fields.id)
+            }
+            else {
+                console.log('METHOD INSERT')
+                query = "INSERT INTO tb_users (name, email, password, register) VALUES (?, ?, ?, ?)"
+            }
+
+            conn.query(query, params, (err, result) => {
+                if (err) {
+                    f(err);
+                }
+                else {
+                    s(result)
+                }
+            })
+        })
     }
 }
