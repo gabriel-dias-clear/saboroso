@@ -3,6 +3,7 @@ const router = express.Router();
 const users = require('./../inc/users');
 const admin = require('./../inc/admin');
 const menus = require('./../inc/menus');
+const contacts = require('./../inc/contacts');
 const reservations = require('../inc/reservations');
 var sessionData;
 
@@ -95,31 +96,29 @@ router.get('/login', function (req, res, next) {
 
 router.get('/contacts', function (req, res, next) {
 
-    res.render('admin/contacts', admin.getParams(req))
-
+    contacts.getContacts().then(data=>{
+        res.render('admin/contacts', admin.getParams(req, {data}))
+    })
+    
 });
 
+router.delete('/contacts:id', function(req, res, next){
+
+    console.log('Chegou na rota delete de contacts')
+    contacts.delete(req.params.id[1]).then(()=>{
+        res.redirect('/admin/contacts');
+    }).catch(err=>{
+        console.log('Prosseguindo');
+    })
+})
 
 
-
-
-
-/*
-Emails
-*/
 router.get('/emails', function (req, res, next) {
 
     res.render('admin/emails', admin.getParams(req))
 
 });
-/*
-Emails
-*/
 
-
-/*
- Reservations routes
- */
 router.get('/reservations', function (req, res, next) {
 
     reservations.getReservations().then(data => {

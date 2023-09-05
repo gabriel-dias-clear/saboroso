@@ -57,17 +57,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>1.</td>
-                  <td></td>
-                  <td>contato@hcode.com.br</td>
-                  <td>Mussum Ipsum, cacilds vidis litro abertis. Manduma pindureta quium dia nois paga. Viva Forevis
-                    aptent taciti sociosqu ad
-                    litora torquent. In elementis mé pra quem é amistosis quis leo. Admodum accumsan disputationi eu
-                    sit. Vide electram sadipscing
-                    et per.</td>
-                  <td><button type="button" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Excluir</button></td>
-                </tr>
+                <% data.forEach(row=>{%>
+                  <tr data-row="<%= JSON.stringify(row) %>">
+                    <td><%= row.id %></td>
+                    <td><%= row.name %></td>
+                    <td><%= row.email %></td>
+                    <td><%= row.message %></td>
+                    <td><button type="button" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Excluir</button></td>
+                  </tr>
+                  <% })  %>
               </tbody>
             </table>
           </div>
@@ -106,6 +104,28 @@
   <!-- AdminLTE for demo purposes -->
   <script src="dist/js/demo.js"></script>
   <!-- page script -->
+
+
+  <script>
+
+    document.querySelectorAll('.btn-delete').forEach(btn=>{
+
+      btn.addEventListener('click', e=>{
+
+        let tr = e.composedPath().find(el => {
+          return (el.tagName.toUpperCase() === 'TR')
+        })
+
+        let data = JSON.parse(tr.dataset.row);
+
+        fetch(`/admin/contacts:${data.id}`, {
+          method: 'DELETE'
+        }).then(()=>{
+          window.location.reload();
+        });
+      })
+    })
+  </script>
 
 </body>
 
