@@ -36,7 +36,6 @@ module.exports = {
     })
   },
   async save(fields, files) {
-    console.log('CHEGOU EM SAVE')
     let query, params;
     //Verifies if 'files' is empty
     if (Object.keys(files).length === 0) {

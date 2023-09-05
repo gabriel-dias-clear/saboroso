@@ -22,7 +22,6 @@ module.exports = {
                     reject(err);
                 }
                 else {
-                    console.log('Reservations:', result)
                     resolve(result)
                 }
             })

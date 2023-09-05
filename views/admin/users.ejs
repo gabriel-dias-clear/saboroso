@@ -222,22 +222,25 @@
         })
       })
     
-      document.querySelectorAll('.btn-delete').forEach(btn=>{
+      document.querySelectorAll('.btn-delete').forEach(btn => {
 
-        btn.addEventListener('click', e=>{
+      btn.addEventListener('click', e => {
 
-          let tr = e.composedPath().find(el => {
-            return (el.tagName.toUpperCase() === 'TR')
-          })
-
-          let data = JSON.parse(tr.dataset.row)
-          fetch(`/admin/users:${data.id}`, {
-            method: 'DELETE',
-          }).then(()=>{
-            window.location.reload()
-          })
-
+        let tr = e.composedPath().find(el => {
+          return (el.tagName.toUpperCase() === 'TR')
         })
+
+        alert('Deseja excluir este usuário?')
+
+        let data = JSON.parse(tr.dataset.row)
+        fetch(`/admin/users:${data.id}`, {
+          method: 'DELETE',
+        }).then(() => {
+          window.location.reload()
+        })
+
       })
+      })
+
 
   </script>

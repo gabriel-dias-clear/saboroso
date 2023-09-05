@@ -12,7 +12,6 @@ class HcodeFileReader{
     initInputEvent(){
 
         document.querySelector(this.inputEl).addEventListener('change', e=>{
-            console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaa',e.target.files)
             this.reader(e.target.files[0]).then(result => {
                 document.querySelector(this.imgEl).src = result
             })

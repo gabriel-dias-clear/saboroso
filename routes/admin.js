@@ -8,19 +8,18 @@ var sessionData;
 
 
 router.use(function (req, res, next) {
-    console.log('Session data:', sessionData)
-    console.log('Middleware1')
+
     if (['/login'].indexOf(req.url) === -1 && sessionData == undefined) {
-        console.log('[MIDDLEWARE]Session data não definido! Redirecionando para login')
+
         res.redirect('/admin/login');
         return
     }
     else if (sessionData !== undefined) {
-        console.log('[MIDDLEWARE]Session data ENCONTRADO! Prosseguindo para:', req.url)
+
         next()
     }
     else {
-        console.log('[MIDDLEWARE] URlll Requisitada com sessionData definido', req.url)
+
         next()
     }
 
@@ -28,9 +27,9 @@ router.use(function (req, res, next) {
 
 
 router.use(function (req, res, next) {
-    console.log('MIddleware2')
+
     req.menus = admin.getMenus(req);
-    console.log('middleware2 finalizado prosseguindo')
+
     next();
 })
 
@@ -59,8 +58,6 @@ router.get('/', function (req, res, next) {
 
 router.post('/login', function (req, res, next) {
 
-    console.log('chegou no admin login kkkkk')
-
     req.body.email = req.fields.email;
     req.body.password = req.fields.password
     if (!req.body.email) {
@@ -76,8 +73,6 @@ router.post('/login', function (req, res, next) {
             sessionData = user
 
             req.session.user = user;
-
-            console.log('Login concluisdo')
 
             res.redirect('/admin')
 
@@ -143,8 +138,6 @@ router.get('/reservations', function (req, res, next) {
 
 router.post('/reservations', function (req, res, next) {
 
-    console.log('CHEGAMOS AONDE NINGUEM CHEGOU')
-
     reservations.save(req.fields).then(results => {
 
         console.log('Resultados:', results)
@@ -182,11 +175,19 @@ router.post('/users', async function (req, res, next) {
     await users.save(req.fields).then(result=>{
         res.end()
     }).catch(err=>{
-        console.log('Erro=>', err);
-        console.log('Prosseguindo')
+        console.log(err);
     })
     
 });
+
+router.delete('/users:id', function (req, res, next) {
+
+    users.delete(req.params.id[1]).then(response => {
+        res.redirect('/admin/users')
+    }).catch(err=>{
+        console.log(err)
+    })
+})
 
 
 
@@ -205,27 +206,18 @@ router.get('/menus', function (req, res, next) {
 
 router.post('/menus', async function (req, res, next) {
 
-    console.log('Chegou na rota /menus como post');
-
     try {
 
         const resultados = await menus.save(req.fields, req.files);
 
-        console.log('Resultados ocorreram');
-
-        console.log('Resultados:', resultados);
         
         res.send(resultados)
 
     } catch (error) {
 
-        console.error('Ocorreu um erro:', error);
-
         res.status(500).send({'error': 'Ocorreu um erro no servidor'});
-
     }
 
-    console.log('fodassse')
 
 });
 
