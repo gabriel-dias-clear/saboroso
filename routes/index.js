@@ -28,26 +28,30 @@ router.get('/contacts', function(req, res, next){
 
 })
 
-router.post('/contacts', function(req, res, next){
+router.post('/contacts', function(req, res){
+  
+  req.body = req.fields
 
   if(!req.body.name){
-    contacts.render(req,res, 'digite o nome')
-  } else if (!req.body.email) {
-    contacts.render(req, res, 'digite o e-mail')
-  } else if (!req.body.message){
-    contacts.render(req, res, 'digite a mensagem')
-  } else {
-    contacts.save(req.body).then(results => {
-
-      contacts.render(req, res, null, 'Contato enviado com sucesso!')
-
-    }).catch(err=>{
-
-      contacts.render(req, res, err.message)
-
+    contacts.render(req, res, 'Digite o nome')
+  }
+  else if(!req.body.email){
+    contacts.render(req, res, 'Digite o email')
+  }
+  else if(!req.body.message){
+    contacts.render(req, res, 'Digite a mensagem')
+  }
+  else{
+    console.log('req body',req.body)
+    contacts.save(req.body)
+    .then(results =>{
+      req.body = {}
+      contacts.render(req, res, null, 'Contato enviado com sucesso');
+    })
+    .catch(err=>{
+      contacts.render(req, res, err.message);
     })
   }
-  
 })
 
 router.get('/menus', function(req, res, next){
@@ -71,6 +75,7 @@ router.get('/reservations', function(req, res, next){
 })
 
 router.post('/reservations', function(req, res, next){
+
 
 
     if(!req.body.name){
