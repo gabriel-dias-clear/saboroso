@@ -42,7 +42,7 @@
                         <td><%= row.email %></td>
                         <td>
                             <button type="button" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i> Editar</button>&nbsp;
-                            <button type="button" class="btn btn-xs btn-warning btn-update" data-toggle="modal" data-target="#modal-update-password">
+                            <button type="button" class="btn btn-xs btn-warning btn-update">
                                 <i class="fa fa-lock"></i> Alterar Senha</button>&nbsp;
                             <button type="button" class="btn btn-xs btn-danger btn-delete"><i class="fa fa-trash"></i> Excluir</button></td>
                     </tr>
@@ -165,7 +165,9 @@
 
   let formCreate = document.querySelector('#modal-create form');
 
-      let formUpdate = document.querySelector('#modal-update form');
+  let formUpdate = document.querySelector('#modal-update form');
+
+  let formUpdatePassword = document.querySelector('#modal-update-password form');
 
       formCreate.save().then(()=>{
         setTimeout(() => {
@@ -215,6 +217,8 @@
               default:
                 let input = formUpdate.querySelector(`[name=${name}]`)
                 if (input) input.value = data[name];
+                console.log('inputada',input)
+                console.log('inputada',input.value)
             }
 
           }
@@ -240,6 +244,57 @@
         })
 
       })
+      })
+
+      document.querySelectorAll('.btn-update').forEach(btn => {
+
+      btn.addEventListener('click', e => {
+
+        let tr = e.composedPath().find(el => {
+          return (el.tagName.toUpperCase() === 'TR')
+        })
+
+        let data = JSON.parse(tr.dataset.row)
+        console.log('dataaaaaaaaa', data)
+        for (const name in data) {
+
+          switch (name) {
+            case 'photo':
+              formUpdatePassword.querySelector('img').src = '/' + data[name]
+              document.querySelector('#inputPhotoUpdate').dataset.filename = '/' + data[name];
+
+              break
+            case 'date':
+
+              let dataday = data[name].split('-')
+              console.log('dataday split');
+
+              let dataformatted = `${dataday[0]}-${dataday[1]}-${dataday[2].substr(0, 2)}`;
+              console.log('dataformated')
+
+              document.querySelector('#inputDateUpdate').value = dataformatted
+              break
+            
+            case 'password':
+            case 'passwordConfirm':
+            case 'register':
+              break;
+            default:
+              console.log(name)
+              let input = formUpdatePassword.querySelector(`[name=${name}]`)
+
+              if (input) input.value = data[name];
+              console.log(input)
+              
+          }
+
+        }
+        
+        $('#modal-update-password').modal('show')
+      })
+        
+    
+
       })
 
 

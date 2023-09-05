@@ -51,7 +51,7 @@ module.exports = {
     },
 
     async save(fields) {
-
+        console.log('fields aqui:::' , fields)
         console.log('CHeGOU EM SAVETEST')
         console.log(fields)
         let query, params;
@@ -63,13 +63,22 @@ module.exports = {
         //verifies if fields.id is bigger than 0, this specifies if we are creating or updating a query
         if (parseInt(fields.id) >= 0) {
             //UPDATE
-            query = 'UPDATE tb_users SET name = ?, email = ? WHERE id = ?'
-
+            if(fields.password){
+                query = 'UPDATE tb_users SET password = ? WHERE id = ?'
+            
+                params = [
+                    fields.password,
+                    fields.id
+                ]
+            } else {
+                query = 'UPDATE tb_users SET name = ?, email = ? WHERE id = ?'
+            
             params = [
                 fields.name,
                 fields.email,
                 fields.id
             ]
+            }
 
         }
         else {
@@ -116,7 +125,7 @@ module.exports = {
       
             conn.query('DELETE FROM tb_users WHERE id = ?', [id], (err, result)=>{
               if(err){
-                
+
                 reject(err);
               }             
               else{
