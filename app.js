@@ -14,36 +14,46 @@ var adminRouter = require('./routes/admin');
 var app = express();
 
 app.use(async (req, res, next) => {
-
-  if (req.method.toLowerCase() === 'post') {
+  if (req.method.toLocaleLowerCase() === 'post') {
+    
 
     const form = new formidable.IncomingForm({
       uploadDir: path.join(__dirname, "/public/images"),
       keepExtensions: true,
       allowEmptyFiles: true,
+      minFileSize: 0
     });
+
     await new Promise((resolve, reject) => {
       form.parse(req, (err, fields, files) => {
         if (err) {
+          
           reject(err);
           return;
         }
+
         for (const key in fields) {
           fields[key] = fields[key][0];
         }
         if (files.photo) {
           files = files.photo[0];
         }
+
         req.fields = fields;
         req.files = files;
+
+        
         resolve();
+        
         next()
       });
     });
+    
     next()
   } else {
     next();
   }
+  
 });
 
 // view engine setup
