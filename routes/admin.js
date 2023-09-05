@@ -207,19 +207,16 @@ router.get('/menus', function (req, res, next) {
 router.post('/menus', async function (req, res, next) {
 
     try {
-
         const resultados = await menus.save(req.fields, req.files);
 
-        
+
+
         res.send(resultados)
-
     } catch (error) {
-
-        res.status(500).send({'error': 'Ocorreu um erro no servidor'});
+      
     }
-
-
 });
+
 
 
 
