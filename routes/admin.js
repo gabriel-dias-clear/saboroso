@@ -6,6 +6,7 @@ const menus = require('./../inc/menus');
 const emails = require('./../inc/emails');
 const contacts = require('./../inc/contacts');
 const reservations = require('../inc/reservations');
+
 var sessionData;
 
 
@@ -130,7 +131,6 @@ router.get('/reservations', function (req, res, next) {
         res.render('admin/reservations', admin.getParams(req, {
 
             date: {},
-
             data
 
         }))
