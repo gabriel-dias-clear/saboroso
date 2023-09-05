@@ -3,6 +3,7 @@ const router = express.Router();
 const users = require('./../inc/users');
 const admin = require('./../inc/admin');
 const menus = require('./../inc/menus');
+const emails = require('./../inc/emails');
 const contacts = require('./../inc/contacts');
 const reservations = require('../inc/reservations');
 var sessionData;
@@ -115,8 +116,11 @@ router.delete('/contacts:id', function(req, res, next){
 
 router.get('/emails', function (req, res, next) {
 
-    res.render('admin/emails', admin.getParams(req))
+    emails.getEmails().then(data=>{
+        res.render('admin/emails', admin.getParams(req, {data}))
+    })
 
+    
 });
 
 router.get('/reservations', function (req, res, next) {
