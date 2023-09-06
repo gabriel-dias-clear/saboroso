@@ -51,12 +51,10 @@ module.exports = {
     },
 
     async save(fields) {
-        console.log('fields aqui:::' , fields)
-        console.log('CHeGOU EM SAVETEST')
-        console.log(fields)
+
         let query, params;
 
-        console.log('fields:', fields)
+  
 
 
 
@@ -94,14 +92,13 @@ module.exports = {
             ]
         }
 
-        console.log('AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+
         let aux;
         await connpromise.query(query, params).then((result) => {
-            console.log('Corrigido')
-            console.log('result', result);
+
             aux = result
         })
-        console.log('RESULTE:', aux);
+
         return aux
     },
 
@@ -113,7 +110,7 @@ module.exports = {
                     reject(err);
                 }
                 else {
-                    console.log('Reservations:', result)
+
                     resolve(result)
                 }
             })

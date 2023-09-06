@@ -13,11 +13,10 @@ HTMLFormElement.prototype.save = function () {
                 method: form.method,
                 body: formData
             }).then((resultado)=>{
-              console.log('Resultado:', resultado)
-              console.log('Ok')
+
               resolve()
             }).catch(err=>{
-              console.log('Ook')
+
               reject()
             })
         })

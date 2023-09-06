@@ -53,9 +53,7 @@ module.exports = {
     })
   },
   async save(fields, files) {
-
-    console.log('CHeGOU EM SAVETEST')
-    console.log(fields)
+  
     let query, params;
 
 
@@ -63,29 +61,23 @@ module.exports = {
       files = {}
     }
 
-    //Verifies if 'files' is empty
     if (Object.keys(files).length === 0) {
 
-      //if it's empty, then search in db the current photo src and atributtes it to fields.photo
       await this.getPhotoById(fields).then(result => {
 
         fields.photo = result[0].photo
 
       })
     }
-    //If the 'files' has the property filepath, then  attributtes directly to fields.photo the
+   
     else if (files.filepath) {
       fields.photo = `images/${files.newFilename}`
 
     }
 
-    console.log('fields:', fields)
 
-
-
-    //verifies if fields.id is bigger than 0, this specifies if we are creating or updating a query
     if (parseInt(fields.id) >= 0) {
-      //UPDATE
+
       query = 'UPDATE tb_menus SET title = ?, description = ?, price = ?, photo = ? WHERE id = ?'
 
       params = [
@@ -109,14 +101,11 @@ module.exports = {
       ]
     }
 
-    console.log('AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIII')
+    
     let aux;
     await connpromise.query(query, params).then((result)=>{
-      console.log('Corrigido')
-      console.log('result', result);
       aux = result
     })
-    console.log('RESULTE:', aux);
     return aux
   },
   delete(id){
